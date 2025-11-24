@@ -97,7 +97,12 @@ typedef struct s_ray
     int     map_y;
     double  o_angle;
     double  distance_r;
-    double  
+    double  feye_distance;
+    double  update_angle;
+    double  distance_projection_plan;
+    double  h_wall_projection;
+    double  update_angle;
+    double  o_angle;
     t_player player;
 }   t_ray;
 

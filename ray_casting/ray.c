@@ -13,9 +13,6 @@
 #include "../cub.h"
 #include <math.h>
 
-// -------------------------
-// Player Initialization
-// -------------------------
 void	init_player_raycasting(t_cub *cub)
 {
 	char	o = cub->map_lines[cub->player_pos.y][cub->player_pos.x];
@@ -38,9 +35,6 @@ void	init_player_raycasting(t_cub *cub)
 	}
 }
 
-// -------------------------
-// Texture loading (same)
-// -------------------------
 void	load_textures(t_cub *cub)
 {
 	cub->tex_north.img = NULL;
@@ -65,165 +59,6 @@ void	load_texture(t_cub *cub, t_texture *tex, char *path)
 		&tex->line_len, &tex->endian);
 }
 
-// -------------------------
-// Drawing helpers
-// -------------------------
-// void	my_mlx_pixel_put(t_cub *cub, int x, int y, int color)
-// {
-// 	char	*dst;
-
-// 	if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
-// 		return;
-// 	dst = cub->addr + (y * cub->line_len + x * (cub->bpp / 8));
-// 	*(unsigned int *)dst = color;
-// }
- //drawing skyyy =============
-void	draw_ceiling(t_cub *cub)
-{
-	int x;
-	int y;
-
-	y = 0;
-	while (y < HEIGHT)
-	{
-		x = 0;
-		while (x < WIDTH)
-		{
-			my_mlx_pixel_put(cub, x, y, cub->ceiling_color);
-			x++;
-		}
-		y++;
-	}
-}
-// =============================
-
-
-
-// drawing flooor ===========
-void	draw_floor(t_cub *cub)
-{
-	int y;
-	int x;
-
-	y = HEIGHT / 2;
-	while (y < HEIGHT)
-	{
-		x = 0;
-		while (x < WIDTH)
-		{
-			my_mlx_pixel_put(cub, x, y, cub->floor_color);
-			x++;
-		}
-		y++;
-	}
-}
-// ==============================
-
-// -------------------------
-// Ray initialization (angle-based)
-// -------------------------
-// void	init_ray(t_cub *cub, t_ray *ray, int x)
-// {
-// 	double	ray_angle;
-	
-// 	ray_angle = cub->player.angle - (FOV / 2.0) + (FOV / WIDTH);
-// 	ray->ray_dir_x = cos(ray_angle);
-// 	ray->ray_dir_y = sin(ray_angle); 
-
-// 	ray->map_x = (int)cub->player.pos_x; // 2
-// 	ray->map_y = (int)cub->player.pos_y; // 2
-
-// 	ray->delta_dist_x = fabs(1 / ray->ray_dir_x);
-// 	ray->delta_dist_y = fabs(1 / ray->ray_dir_y);
-// 	ray->hit = 0;
-
-// 	if (ray->ray_dir_x < 0)
-// 	{
-// 		ray->step_x = -1;
-// 		ray->side_dist_x = (cub->player.pos_x - ray->map_x) * ray->delta_dist_x;
-// 	}
-// 	else
-// 	{
-// 		ray->step_x = 1;
-// 		ray->side_dist_x = (ray->map_x + 1.0 - cub->player.pos_x) * ray->delta_dist_x;
-// 	}
-// 	if (ray->ray_dir_y < 0)
-// 	{
-// 		ray->step_y = -1;
-// 		ray->side_dist_y = (cub->player.pos_y - ray->map_y) * ray->delta_dist_y;
-// 	}
-// 	else
-// 	{
-// 		ray->step_y = 1;
-// 		ray->side_dist_y = (ray->map_y + 1.0 - cub->player.pos_y) * ray->delta_dist_y;
-// 	}
-// }
-
-// // -------------------------
-// // DDA, Wall distance & drawing (same logic)
-// // -------------------------
-// void	perform_dda(t_cub *cub, t_ray *ray)
-// {
-// 	while (ray->hit == 0)
-// 	{
-// 		if (ray->side_dist_x < ray->side_dist_y)
-// 		{
-// 			ray->side_dist_x += ray->delta_dist_x;
-// 			ray->map_x += ray->step_x;
-// 			ray->side = 0;
-// 		}
-// 		else
-// 		{
-// 			ray->side_dist_y += ray->delta_dist_y;
-// 			ray->map_y += ray->step_y;
-// 			ray->side = 1;
-// 		}
-// 		if (cub->map_lines[ray->map_y][ray->map_x] == '1')
-// 			ray->hit = 1;
-// 	}
-// }
-
-// void	calculate_wall_distance(t_cub *cub, t_ray *ray)
-// {
-// 	if (ray->side == 0)
-// 		ray->perp_wall_dist = (ray->map_x - cub->player.pos_x + 
-// 			(1 - ray->step_x) / 2) / ray->ray_dir_x;
-// 	else
-// 		ray->perp_wall_dist = (ray->map_y - cub->player.pos_y + 
-// 			(1 - ray->step_y) / 2) / ray->ray_dir_y;
-	
-// 	ray->line_height = (int)(HEIGHT / ray->perp_wall_dist);
-// 	ray->draw_start = -ray->line_height / 2 + HEIGHT / 2;
-// 	if (ray->draw_start < 0)
-// 		ray->draw_start = 0;
-// 	ray->draw_end = ray->line_height / 2 + HEIGHT / 2;
-// 	if (ray->draw_end >= HEIGHT)
-// 		ray->draw_end = HEIGHT - 1;
-// }
-
-// void	draw_wall(t_cub *cub, t_ray *ray, int x)
-// {
-// 	int	y;
-// 	int	color;
-
-// 	if (ray->side == 0 && ray->ray_dir_x > 0)
-// 		color = 0xFF0000; // East
-// 	else if (ray->side == 0 && ray->ray_dir_x < 0)
-// 		color = 0x00FF00; // West
-// 	else if (ray->side == 1 && ray->ray_dir_y > 0)
-// 		color = 0x0000FF; // South
-// 	else
-// 		color = 0xFFFF00; // North
-	
-// 	if (ray->side == 1)
-// 		color = (color >> 1) & 8355711;
-// 	for (y = ray->draw_start; y < ray->draw_end; y++)
-// 		my_mlx_pixel_put(cub, x, y, color);
-// }
-
-// -------------------------
-// Frame drawing
-// -------------------------
 int is_wall(t_cub *cub, double x, double y)
 {
     int map_x = (int)(x / T_SIZE);
@@ -238,8 +73,8 @@ int is_wall(t_cub *cub, double x, double y)
 
 double ft_calcul_vitaghors(t_cub *cub, double hit_x, double hit_y)
 {
-    double dx = hit_x - cub->player.x;
-    double dy = hit_y - cub->player.y;
+    double dx = hit_x - cub->player.pos_x;
+    double dy = hit_y - cub->player.pos_y;
 
     return sqrt(dx * dx + dy * dy);
 }
@@ -348,6 +183,7 @@ void	draw_frame(t_cub *cub)
 	cub->addr = mlx_get_data_addr(cub->img, &cub->bpp, &cub->line_len, &cub->endian);
 	draw_ceiling(cub);
 	draw_floor(cub);
+	ray.distance_projection_plan = (WIDTH / 2 / tan(FOV / 2));
 
 	i = 0;
 	cub->player.f_down = false;
@@ -355,10 +191,10 @@ void	draw_frame(t_cub *cub)
 	cub->player.f_right = false;
 	cub->player.f_left = false;
 	ray.s_angle = cub->player.angle - (FOV / 2); // this if the player facing example 270 the start angle is 270 - (60 / 2) = 240
-	ray.o_angle = cub->ray.s_angle;
+	ray.o_angle = cub->player.angle;
 	while (i < WIDTH)
 	{
-		cub->player.angle = cub->ray.s_angle + i * (FOV / WIDTH);
+		ray.update_angle = cub->ray.s_angle + i * (FOV / WIDTH);
 		if (cub->player.angle > M_PI * 2)
 			cub->player.angle = fmod(cub->player.angle, 2 * M_PI);
 		else if(cub->player.angle < 0)
@@ -372,9 +208,10 @@ void	draw_frame(t_cub *cub)
 		else
 			cub->player.f_up = 1;
 		ray.distance_r = ft_casting(cub);
-		ray.
+		ray.feye_distance = cos(ray.update_angle - ray.o_angle) * ray.distance_r;
+		ray.h_wall_projection = (T_SIZE / ray.feye_distance) * ray.distance_projection_plan;
+		
 	}
-	
 	mlx_put_image_to_window(cub->mlx, cub->window, cub->img, 0, 0);
 	mlx_destroy_image(cub->mlx, cub->img);
 }
